@@ -1,10 +1,11 @@
 <template>
-    <div class="inputBox" shadow>
-        <input type="text" v-model="newTodoItem" @keyup.enter="addTodo"> <!-- input 에 입력 된 값을 동적으로 vue 와 연동 -->
-        <span class="addContainer" v-on:click="addTodo">
-          <font-awesome-icon class="fa-2x addBtn" icon="plus" />
-        </span>
-    </div>
+  <div class="inputBox" shadow>
+    <input type="text" v-model="newTodoItem" @keyup.enter="addTodo" />
+    <!-- input 에 입력 된 값을 동적으로 vue 와 연동 -->
+    <span class="addContainer" v-on:click="addTodo">
+      <font-awesome-icon class="fa-2x addBtn" icon="plus" />
+    </span>
+  </div>
 </template>
 
 <script>
@@ -12,21 +13,20 @@ export default {
   data: function() {
     return {
       newTodoItem: ""
-    }
+    };
   },
   methods: {
     addTodo: function() {
-      if (this.newTodoItem !== '') {
-        var obj = {completed: false, item: this.newTodoItem};
-      localStorage.setItem(this.newTodoItem, JSON.stringify(obj));
-      this.clearInput();
+      if (this.newTodoItem !== "") {
+        this.$emit("addTodoItem", this.newTodoItem);
+        this.clearInput();
       }
     },
     clearInput: function() {
-      this.newTodoItem = '';
+      this.newTodoItem = "";
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -45,7 +45,7 @@ input:focus {
 }
 .addContainer {
   float: right;
-  background: linear-gradient(to right, #6478FB, #8763FB);
+  background: linear-gradient(to right, #6478fb, #8763fb);
   display: block;
   width: 3rem;
   border-radius: 0 5px 5px 0;
