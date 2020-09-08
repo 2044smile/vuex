@@ -1,32 +1,38 @@
 <template>
   <div>
     <transition-group name="list" tag="ul">
-      <li v-for="(todoItem, index) in propsdata" v-bind:key="todoItem.item" class="shadow">
+      <li
+        v-for="(todoItem, index) in storedTodoItems"
+        v-bind:key="todoItem.item"
+        class="shadow"
+      >
         <font-awesome-icon
           class="fa-2x checkBtn"
           icon="check"
           v-bind:class="{checkBtnCompleted: todoItem.completed}"
-          @click="toggleComplete(todoItem, index)"
+          @click="toggleComplete({todoItem, index})"
         />
         <span v-bind:class="{textCompleted: todoItem.completed}">{{ todoItem.item }}</span>
-        <span class="removeBtn" @click="removeTodo(todoItem, index)">
+        <span class="removeBtn" @click="removeTodo({todoItem, index})">
           <font-awesome-icon class="fa-2x" icon="trash" />
         </span>
       </li>
-     </transition-group>
+    </transition-group>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapMutations } from "vuex";
+
 export default {
-  props: ["propsdata"],
   methods: {
-    removeTodo(todoItem, index) {
-      this.$emit("removeItem", todoItem, index);
-    },
-    toggleComplete(todoItem, index) {
-      this.$emit("toggleItem", todoItem, index);
-    }
+    ...mapMutations({
+      removeTodo: "removeOneItem",
+      toggleComplete: "toggleOneItem"
+    }),
+  },
+  computed: {
+    ...mapGetters(["storedTodoItems"])
   }
 };
 </script>
@@ -66,10 +72,12 @@ li {
 }
 
 /* 리스트 아이템 트랜지션 효과*/
-.list-enter-active, .list-leave-active {
+.list-enter-active,
+.list-leave-active {
   transition: all 0.5s;
 }
-.list-enter, .list-leave-to {
+.list-enter,
+.list-leave-to {
   opacity: 0;
   transform: translateY(30px);
 }
